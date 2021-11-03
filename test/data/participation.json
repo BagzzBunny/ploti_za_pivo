@@ -1,0 +1,5 @@
+[
+	{"name": "A", "participation": {"Vasya": 5, "Petya": 5}},
+	{"name": "B", "participation": {"Masha": 1}},
+	{"name": "C", "participation": {"Vasya": 1, "Petya": 1}}
+]
