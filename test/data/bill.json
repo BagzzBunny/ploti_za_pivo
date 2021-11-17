@@ -1,0 +1,5 @@
+[
+	{"name": "A", "qty": 5, "price": 100.0},
+	{"name": "B", "qty": 1, "price": 30.0},
+	{"name": "C", "qty": 1, "price": 10.0}
+]
