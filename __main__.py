@@ -4,10 +4,11 @@ from utils.payment_reader import PaymentReader as pr
 
 
 bill_reader = BillReader("test\\data\\bill.json")
-calculator = DebtCalculator("test\\data\\participation.json", "test\\data\\bill.json")
+calculator = DebtCalculator()
 debt = calculator.get_debts()
 print(debt)
 payment = pr.get_payment("test\\data\\payment.json")
-calculator.update_debts(payment)
+calculator.update_debts(participation_path="test\\data\\participation.json", bill_path="test\\data\\bill.json")
+calculator.update_debts(update=payment)
 debt = calculator.get_debts()
 print(debt)
