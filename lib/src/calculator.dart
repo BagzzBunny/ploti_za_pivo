@@ -23,7 +23,7 @@ class Calculator {
       for (var person in product["participation"].keys) {
         if (debts.containsKey(person)) {
           debts[person] =
-              debts[person]! + product["participation"][person] / parts * price;
+              debts[person] + product["participation"][person] / parts * price;
         } else {
           debts[person] = product["participation"][person] / parts * price;
         }
@@ -34,7 +34,7 @@ class Calculator {
   void send_payment(payment_data) {
     for (var person in payment_data.keys) {
       if (debts.containsKey(person)) {
-        debts[person] = debts[person]! + payment_data[person];
+        debts[person] = debts[person] + payment_data[person];
       } else {
         debts[person] = payment_data[person];
       }

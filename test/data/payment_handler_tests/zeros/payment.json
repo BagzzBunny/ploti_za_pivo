@@ -1,0 +1,5 @@
+[
+	{"payer": "A", "amount": 0},
+	{"payer": "B", "amount": 0},
+    {"payer": 0, "amount": 0}
+]
