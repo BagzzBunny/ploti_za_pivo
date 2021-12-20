@@ -1,11 +1,6 @@
-import 'utils/bill.dart';
-import 'utils/calculator.dart';
-import 'utils/payment_handler.dart';
+import 'package:ploti_za_pivo/shelf.dart';
 
 void main() {
-  int a = 0;
-  a += 5;
-  print(a);
   Bill my_bill = new Bill([
     {"name": "A", "qty": 5, "price": 100.0},
     {"name": "B", "qty": 1, "price": 30.0},
@@ -33,7 +28,7 @@ void main() {
     {"payer": "Vasya", "amount": 130.0},
     {"payer": "Masha", "amount": 10.0}
   ];
-  print('payment: $PaymentHandler.handle_payment_data(payment_data)');
+  print('payment:');
   var handled_payment_data = PaymentHandler.handle_payment_data(payment_data);
   calc.send_payment(handled_payment_data);
   print(calc.get_debts());

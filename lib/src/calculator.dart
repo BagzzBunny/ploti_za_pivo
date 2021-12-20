@@ -11,9 +11,9 @@ class Calculator {
     debts = {};
   }
 
-  void update_debts(data, var bill_data) {
+  void update_debts(var participation_data, var bill_data) {
     Bill bill = new Bill(bill_data);
-    for (var product in data) {
+    for (var product in participation_data) {
       String name = product["name"];
       double price = bill.get_product_price(name);
       dynamic parts = 0;
@@ -23,7 +23,7 @@ class Calculator {
       for (var person in product["participation"].keys) {
         if (debts.containsKey(person)) {
           debts[person] =
-              debts[person]! + product["participation"][person] / parts * price;
+              debts[person] + product["participation"][person] / parts * price;
         } else {
           debts[person] = product["participation"][person] / parts * price;
         }
@@ -34,7 +34,7 @@ class Calculator {
   void send_payment(payment_data) {
     for (var person in payment_data.keys) {
       if (debts.containsKey(person)) {
-        debts[person] = debts[person]! + payment_data[person];
+        debts[person] = debts[person] + payment_data[person];
       } else {
         debts[person] = payment_data[person];
       }

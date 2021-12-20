@@ -1,0 +1,5 @@
+[
+	{"payer": "A", "amount": 140.0},
+	{"payer": "B", "amount": 50.0},
+    {"payer": "C", "amount": 180.0}
+]
