@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ploti_za_pivo_mobile/models/bind_info.dart';
 import 'package:ploti_za_pivo_mobile/models/cart.dart';
 import 'package:ploti_za_pivo_mobile/models/member.dart';
+import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 
 class CartAssertRoute extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() {
+  _CartAssertRouteState createState() {
     return _CartAssertRouteState();
   }
 
@@ -14,7 +16,6 @@ class CartAssertRoute extends StatefulWidget{
 class _CartAssertRouteState extends State<CartAssertRoute> {
   String mName = '';
   String pName = '';
-  int bQty = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
                                 child: Form(
                                     autovalidateMode: AutovalidateMode.always,
                                     onChanged: () {
-                                      Form.of(primaryFocus!.context!)!.save();
+                                      //Form.of(primaryFocus!.context!)!.save();
                                     },
                                     child: Column(
                                       children: [
@@ -88,6 +89,9 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
                                           onChanged: (String? value) {
                                             setState(() {
                                               pName = value!;
+                                              var product = context.read<Cart>().getProduct(pName);
+                                              context.read<BindInfo>().updateItems(product == null ? 0 : product.qty);
+
                                             });
                                           },
 
@@ -98,22 +102,17 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
                                               child: Text(product.name),
                                             );
                                           }).toList(),
+
                                         ),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             hintText: 'Позиция',
                                           ),
-                                          value: bQty == 0 ? null : bQty.toString(),
+                                          value: context.watch<BindInfo>().selected == 0 ? null : context.watch<BindInfo>().selected.toString(),
                                           onChanged: (String? value) {
-                                            bQty = int.tryParse(value!)!;
+                                            context.read<BindInfo>().selected = int.tryParse(value!)!;
                                           },
-                                          items: List<int>.generate(cart.getProduct(pName) == null ? 0 : cart.getProduct(pName).qty,(i) =>i+1)
-                                              .map((int qty) {
-                                            return DropdownMenuItem<String>(
-                                              value: qty.toString(),
-                                              child: Text(qty.toString()),
-                                            );
-                                          }).toList(),
+                                          items: context.watch<BindInfo>().items,
                                         ),
                                       ],
                                     )
@@ -124,18 +123,19 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
                                 TextButton(
                                   onPressed: () {
                                     mName = '';
-                                    //pName = '';
-                                    bQty = 0;
+                                    pName = '';
+                                    context.read<BindInfo>().updateItems(0);
+
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Отмена'),
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    cart.addBind(Bind(cart.getMember(mName),cart.getProduct(pName),bQty));
+                                    cart.addBind(Bind(cart.getMember(mName),cart.getProduct(pName),context.read<BindInfo>().selected));
                                     mName = '';
                                     pName = '';
-                                    bQty = 0;
+                                    context.read<BindInfo>().updateItems(0);
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Добавить'),

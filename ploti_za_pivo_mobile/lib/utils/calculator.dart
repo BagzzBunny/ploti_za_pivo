@@ -11,21 +11,21 @@ class Calculator {
     debts = {};
   }
 
-  void update_debts(data, var bill_data) {
-    Bill bill = new Bill(bill_data);
+  void update_debts(data, var billData) {
+    Bill bill = new Bill(billData);
     for (var product in data) {
       String name = product["name"];
       double price = bill.get_product_price(name);
       dynamic parts = 0;
-      for (var person in product["participation"].keys) {
-        parts = parts + product["participation"][person];
+      for (var person in product["participation"]) {//person was key
+        parts = parts + person["amount"];
       }
-      for (var person in product["participation"].keys) {
-        if (debts.containsKey(person)) {
-          debts[person] =
-              debts[person]! + product["participation"][person] / parts * price;
+      for (var person in product["participation"]) {
+        if (debts.containsKey(person["name"])) {
+          debts[person["name"]] =
+              debts[person["name"]]! + person["amount"] / parts * price;
         } else {
-          debts[person] = product["participation"][person] / parts * price;
+          debts[person["name"]] = person["amount"] / parts * price;
         }
       }
     }

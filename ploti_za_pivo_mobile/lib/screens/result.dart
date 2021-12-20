@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:provider/src/provider.dart';
 
 class ResultRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var cart = context.read<Cart>();
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
@@ -18,18 +21,11 @@ class ResultRoute extends StatelessWidget {
                     height: 600,
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Имя'),
-                            Text('Позиция'),
-                          ],
-                        ),
                         Divider(),
                         Container(
                           height: 500,
                           child: ListView.builder(
-                              itemCount: 3,
+                              itemCount: cart.members.length,
                               itemBuilder: (context,index){
                                 return MemberSumUp(index);
                               }
@@ -42,6 +38,7 @@ class ResultRoute extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: (){
+                    context.read<Cart>().calculateResult();
                     Navigator.pushNamed(context, '/transactions');
                   },
                   child: Text('Далее'),
@@ -61,23 +58,25 @@ class MemberSumUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cart = context.watch<Cart>();
+    var member = cart.members[index];
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Имя' + index.toString()),
+        Text(member.name),
         Container(
           height: 100,
           child: ListView.builder(
-            itemCount: 3,
+            itemCount: cart.getMemberBinds(member.name).length,
             itemBuilder: (context,innerindex) {
-              return Text('Позиция и количество ' + innerindex.toString());
+              return ProductSumUp(innerindex,member.name);
             },
           ),
         ),
 
         Divider(),
-        Text('Итого: итоговый счет ' + index.toString()),
+        Text('Итого: ' + cart.getMemberBindsSum(member.name).toString()),
         SizedBox(
           height: 20,
         )
@@ -85,4 +84,17 @@ class MemberSumUp extends StatelessWidget {
     );
   }
 
+}
+
+class ProductSumUp extends StatelessWidget {
+  final int index;
+  final String mName;
+
+  ProductSumUp(this.index, this.mName);
+
+  @override
+  Widget build(BuildContext context) {
+    var binds = context.read<Cart>().getMemberBinds(mName);
+    return Text(binds[index].product.name + ' ' + binds[index].qty.toString());
+  }
 }

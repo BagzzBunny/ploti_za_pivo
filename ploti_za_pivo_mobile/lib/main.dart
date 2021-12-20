@@ -11,6 +11,7 @@ import 'package:ploti_za_pivo_mobile/screens/screen_or_manual_cart.dart';
 import 'package:ploti_za_pivo_mobile/screens/transactions.dart';
 import 'package:ploti_za_pivo_mobile/screens/welcome.dart';
 
+import 'models/bind_info.dart';
 import 'models/cart.dart';
 
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => HistoryManager()),
         ChangeNotifierProvider(create: (context) => Cart(DateTime.now())),
+        ChangeNotifierProvider(create: (cintext) => BindInfo()),
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

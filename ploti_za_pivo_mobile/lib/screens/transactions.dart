@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:ploti_za_pivo_mobile/models/history_manager.dart';
+import 'package:provider/src/provider.dart';
 
 class TransactionsRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var cart = context.watch<Cart>();
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
@@ -30,7 +34,7 @@ class TransactionsRoute extends StatelessWidget {
                         Container(
                           height: 400,
                           child: ListView.builder(
-                              itemCount: 3,
+                              itemCount: cart.result.keys.toList().length,
                               itemBuilder: (context,index){
                                 return Transaction(index);
                               }
@@ -43,6 +47,7 @@ class TransactionsRoute extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: (){
+                    context.read<HistoryManager>().addCart(cart);
                     Navigator.pushNamed(context, '/history');
                   },
                   child: Text('Перевести'),
@@ -62,12 +67,15 @@ class Transaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cart = context.watch<Cart>();
+    var mName = cart.result.keys.toList()[index];
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text('Имя' + index.toString()),
-        Text('Сумма' + index.toString()),
-        Text('Кому' + index.toString()),
+        Text(mName),
+        Text(cart.result[mName].toString()),
+        Text('Борис работает'),
       ],
     );
   }
