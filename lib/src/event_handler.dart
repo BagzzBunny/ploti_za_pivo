@@ -29,9 +29,7 @@ class EventHandler {
 
   void calculate_overall_debts() {
     for (var purchase in purchases) {
-      for (var person in purchase[1].keys) {
-        overall_debts[person] += purchase[person];
-      }
+      purchase[1].forEach((String person, debt) => overall_debts[person] += debt);
     }
   }
 
@@ -43,5 +41,3 @@ class EventHandler {
     end_date = date;
   }
 }
-
-

@@ -22,10 +22,13 @@ class Calculator {
       }
       for (var person in product["participation"].keys) {
         if (debts.containsKey(person)) {
-          debts[person] =
-              debts[person] + product["participation"][person] / parts * price;
+          debts[person] = double.parse(
+              (debts[person] + product["participation"][person] / parts * price)
+                  .toStringAsFixed(2));
         } else {
-          debts[person] = product["participation"][person] / parts * price;
+          debts[person] = double.parse(
+              (product["participation"][person] / parts * price)
+                  .toStringAsFixed(2));
         }
       }
     }
@@ -34,9 +37,10 @@ class Calculator {
   void send_payment(payment_data) {
     for (var person in payment_data.keys) {
       if (debts.containsKey(person)) {
-        debts[person] = debts[person] + payment_data[person];
+        debts[person] = double.parse(
+            (debts[person] + payment_data[person]).toStringAsFixed(2));
       } else {
-        debts[person] = payment_data[person];
+        debts[person] = double.parse((payment_data[person]).toStringAsFixed(2));
       }
     }
   }
