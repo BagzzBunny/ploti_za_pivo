@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:ploti_za_pivo_mobile/app_bar_builder.dart';
+import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:ploti_za_pivo_mobile/models/member.dart';
+import 'package:provider/src/provider.dart';
 
 class AddMembersRoute extends StatelessWidget {
+  String newMember = "";
+
+
   @override
   Widget build(BuildContext context) {
+    var cart = context.watch<Cart>();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -18,16 +25,55 @@ class AddMembersRoute extends StatelessWidget {
                 Container(
                   height: 500,
                   child: ListView.builder(
-                    itemCount: 3,
+                    itemCount: cart.members.length,
                     itemBuilder: (context,index) {
-                      return Member(index);
+                      return BuildMember(index);
                     }
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: (){
-
-                  },
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Новый участник'),
+                      content: FocusTraversalGroup(
+                        child: Form(
+                          autovalidateMode: AutovalidateMode.always,
+                          onChanged: () {
+                            Form.of(primaryFocus!.context!)!.save();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints.tight(const Size(200, 50)),
+                              child: TextFormField(
+                                onSaved: (String? value) {
+                                  newMember = value!;
+                                },
+                              ),
+                            ),
+                          )
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            newMember ='';
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Отмена'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            cart.addMember(Member(newMember,false,0));
+                            newMember ='';
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Добавить'),
+                        ),
+                      ],
+                    ),
+                  ),
                   child: Text('Добавить'),
                 ),
                 ElevatedButton(
@@ -44,54 +90,74 @@ class AddMembersRoute extends StatelessWidget {
   }
 }
 
-class Member extends StatefulWidget {
+class BuildMember extends StatefulWidget {
   final int index;
-  Member(this.index);
+  BuildMember(this.index);
   @override
-  State<StatefulWidget> createState() => _MemberState(this.index);
+  State<StatefulWidget> createState() => _BuildMemberState(this.index);
 
 }
 
-class _MemberState extends State<Member> {
+class _BuildMemberState extends State<BuildMember> {
   final int index;
-  bool payed = false;
-  _MemberState(this.index);
+  _BuildMemberState(this.index);
 
   @override
   Widget build(BuildContext context) {
+    var cart = context.read<Cart>();
+    Member member = cart.members[index];
     return Column(
-      children: payed ? [
+
+      children: member.payed ? [
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('Имя' + index.toString()),
+            Text(member.name),
             Checkbox(
-              value: payed,
+              value: member.payed,
               onChanged: (val) {
                 setState(() {
-                  payed = val!;
+                  member.payed = val!;
                 });
               },
+            ),
+            IconButton(
+              onPressed: (){
+                context.read<Cart>().removeMember(member);
+              },
+              icon: Icon(Icons.cancel),
             ),
           ],
         ),
 
         TextFormField(
-          initialValue: 'Сумма, которую заплатил',
-        )
+          decoration: InputDecoration(
+            hintText: 'Сумма, которую заплатил',
+          ),
+          onChanged: (val){
+            member.amountPayed = double.tryParse(val)!;
+          },
+        ),
+
       ] : [
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('Имя' + index.toString()),
+            Text(member.name),
             Checkbox(
-              value: payed,
+              value: member.payed,
               onChanged: (val) {
                 setState(() {
-                  payed = val!;
+                  member.payed = val!;
                 });
               },
             ),
+            IconButton(
+              onPressed: (){
+                context.read<Cart>().removeMember(member);
+              },
+              icon: Icon(Icons.cancel),
+            )
           ],
         ),
 

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:provider/src/provider.dart';
 
 class CartEditRoute extends StatelessWidget {
+  String pName = '';
+  String pQty = '';
+  String pCost = '';
   @override
   Widget build(BuildContext context) {
+    var cart = context.watch<Cart>();
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
@@ -30,7 +36,7 @@ class CartEditRoute extends StatelessWidget {
                         Container(
                           height: 400,
                           child: ListView.builder(
-                              itemCount: 3,
+                              itemCount: cart.products.length,
                               itemBuilder: (context,index){
                                 return CartPosition(index);
                               }
@@ -38,11 +44,84 @@ class CartEditRoute extends StatelessWidget {
                         ),
 
                         ElevatedButton(
-                          onPressed: (){
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Новая позиция чека'),
+                              content: FocusTraversalGroup(
+                                child: Form(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    onChanged: () {
+                                      Form.of(primaryFocus!.context!)!.save();
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints.tight(const Size(200, 50)),
+                                            child: TextFormField(
+                                              decoration: InputDecoration(hintText: 'Наименование'),
+                                              onSaved: (String? value) {
+                                                pName = value!;
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints.tight(const Size(200, 50)),
+                                            child: TextFormField(
+                                              decoration: InputDecoration(hintText: 'Количество'),
+                                              onSaved: (String? value) {
+                                                pQty = value!;
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints.tight(const Size(200, 50)),
+                                            child: TextFormField(
+                                              decoration: InputDecoration(hintText: 'Цена'),
+                                              onSaved: (String? value) {
+                                                pCost = value!;
+                                              },
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
 
-                          },
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    pName = '';
+                                    pQty = '';
+                                    pCost = '';
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Отмена'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    cart.addProduct(Product(pName,int.tryParse(pQty)!,double.tryParse(pCost)!));
+                                    pName = '';
+                                    pQty = '';
+                                    pCost = '';
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Добавить'),
+                                ),
+                              ],
+                            ),
+                          ),
                           child: Text('Добавить'),
-                        )
+                        ),
 
                       ],
                     )
@@ -69,13 +148,20 @@ class CartPosition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cart = context.read<Cart>();
+    Product product = cart.products[index];
     return Row(
-      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text('Позиция' + index.toString()),
-        Text('Количество' + index.toString()),
-        Text('Цена' + index.toString()),
+        Text(product.name),
+        Text(product.qty.toString()),
+        Text(product.price.toString()),
+        IconButton(
+          onPressed: (){
+            context.read<Cart>().removeProduct(product);
+          },
+          icon: Icon(Icons.cancel),
+        ),
       ],
     );
   }
