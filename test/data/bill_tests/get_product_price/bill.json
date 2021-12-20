@@ -1,0 +1,5 @@
+[
+	{"name": "pivo A", "qty": 5, "price": 100.0},
+	{"name": "pivo B", "qty": 6, "price": 500.0},
+	{"name": "pivo C", "qty": 8, "price": 3000000000000.0}
+]
