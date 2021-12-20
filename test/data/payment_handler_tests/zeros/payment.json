@@ -1,5 +1,5 @@
 [
-	{"payer": "A", "amount": 0},
-	{"payer": "B", "amount": 0},
-    {"payer": 0, "amount": 0}
+	{"payer": "A", "amount": 0.0},
+	{"payer": "B", "amount": 0.0},
+    {"payer": 0, "amount": 0.0}
 ]
