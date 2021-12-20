@@ -24,5 +24,4 @@ void main() {
     expect(event.get_overall_debts(),
         {'Вася': 0, 'Петя': 0, 'Боря': 0, 'Дима': 0});
   });
-
 }

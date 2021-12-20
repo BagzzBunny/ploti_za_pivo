@@ -101,4 +101,10 @@ void main() {
     calc.clear_debts();
     expect(calc.get_debts(), {});
   });
+
+  test('test calculate who pays who', () {
+    Calculator calc = new Calculator();
+    calc.set_debts({'Vasya': -75.0, 'Petya': 55.0, 'Masha': 20.0});
+    expect(calc.calculate_transactions(), [['Vasya', 0.0], ['Petya', {'Vasya': 55.0}], ['Masha', {'Vasya': 20.0}]]);
+  });
 }

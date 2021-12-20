@@ -1,3 +1,5 @@
+import 'calculator.dart';
+
 class EventHandler {
   String name = '';
   List participators = [];
@@ -29,8 +31,15 @@ class EventHandler {
 
   void calculate_overall_debts() {
     for (var purchase in purchases) {
-      purchase[1].forEach((String person, debt) => overall_debts[person] += debt);
+      purchase[1]
+          .forEach((String person, debt) => overall_debts[person] += debt);
     }
+  }
+
+  get_overall_transacions() {
+    Calculator calc = new Calculator();
+    calc.set_debts(overall_debts);
+    return calc.calculate_transactions();
   }
 
   get_overall_debts() {
