@@ -14,6 +14,28 @@ class Cart extends ChangeNotifier{
 
   Cart(this.date);
 
+  @override
+  bool operator ==(Object other) => other is Cart && other.date == date;
+
+  @override
+  int get hashCode => date.hashCode;
+
+  setCart(Cart cart){
+    date = cart.date;
+    members = List<Member>.from(cart.members);
+    products = List<Product>.from(cart.products);
+    binds = List<Bind>.from(cart.binds);
+    result = Map<String, double>.from(cart.result);
+  }
+
+  clearCart(){
+    date = DateTime.now();
+    members = [];
+    products =[];
+    binds = [];
+    result = {};
+  }
+
   calculateResult(){
     Bill bill = Bill(products.map((p) => {"name": p.name, "qty": p.qty, "price": p.price}).toList());
     var billData = bill.get_bill_data();
@@ -62,9 +84,15 @@ class Cart extends ChangeNotifier{
   getMemberBindsSum(String mName){
     Member? target = members.firstWhereOrNull((element) => element.name == mName);
     var b = binds.where((element) => element.member == target).toList();
+
     double sum = 0;
+
     for (var bind in b){
-      sum += bind.product.price;
+      int prts = 0;
+      for (var pbind in binds.where((element) => element.product == bind.product).toList()){
+        prts+=pbind.qty;
+      }
+      sum += bind.product.price * bind.qty / prts;
     }
     return sum;
   }

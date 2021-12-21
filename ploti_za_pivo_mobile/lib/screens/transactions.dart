@@ -7,55 +7,53 @@ class TransactionsRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cart = context.watch<Cart>();
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text('Плати За Пиво'),
-            backgroundColor: Colors.blue,
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Плати За Пиво'),
+          backgroundColor: Colors.blue,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('Переводы'),
+              Container(
+                  height: 500,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text('Кто?'),
+                          Text('Сколько?'),
+                          Text('Кому?'),
+                        ],
+                      ),
+                      Divider(),
+                      Container(
+                        height: 400,
+                        child: ListView.builder(
+                            itemCount: cart.result.keys.toList().length,
+                            itemBuilder: (context,index){
+                              return Transaction(index);
+                            }
+                        ),
+                      ),
+
+                    ],
+                  )
+              ),
+
+              ElevatedButton(
+                onPressed: (){
+                  context.read<HistoryManager>().addCart(cart);
+                  Navigator.popUntil(context, ModalRoute.withName('/history'));
+                },
+                child: Text('Перевести'),
+              )
+            ],
           ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('Переводы'),
-                Container(
-                    height: 500,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text('Кто?'),
-                            Text('Сколько?'),
-                            Text('Кому?'),
-                          ],
-                        ),
-                        Divider(),
-                        Container(
-                          height: 400,
-                          child: ListView.builder(
-                              itemCount: cart.result.keys.toList().length,
-                              itemBuilder: (context,index){
-                                return Transaction(index);
-                              }
-                          ),
-                        ),
-
-                      ],
-                    )
-                ),
-
-                ElevatedButton(
-                  onPressed: (){
-                    context.read<HistoryManager>().addCart(cart);
-                    Navigator.pushNamed(context, '/history');
-                  },
-                  child: Text('Перевести'),
-                )
-              ],
-            ),
-          )
-      ),
+        )
     );
   }
 

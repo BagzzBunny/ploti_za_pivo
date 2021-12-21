@@ -6,47 +6,45 @@ class ResultRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cart = context.read<Cart>();
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text('Плати За Пиво'),
-            backgroundColor: Colors.blue,
-          ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('Проверьте результаты'),
-                Container(
-                    height: 600,
-                    child: Column(
-                      children: [
-                        Divider(),
-                        Container(
-                          height: 500,
-                          child: ListView.builder(
-                              itemCount: cart.members.length,
-                              itemBuilder: (context,index){
-                                return MemberSumUp(index);
-                              }
-                          ),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Плати За Пиво'),
+          backgroundColor: Colors.blue,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('Проверьте результаты'),
+              Container(
+                  height: 600,
+                  child: Column(
+                    children: [
+                      Divider(),
+                      Container(
+                        height: 500,
+                        child: ListView.builder(
+                            itemCount: cart.members.length,
+                            itemBuilder: (context,index){
+                              return MemberSumUp(index);
+                            }
                         ),
+                      ),
 
-                      ],
-                    )
-                ),
+                    ],
+                  )
+              ),
 
-                ElevatedButton(
-                  onPressed: (){
-                    context.read<Cart>().calculateResult();
-                    Navigator.pushNamed(context, '/transactions');
-                  },
-                  child: Text('Далее'),
-                )
-              ],
-            ),
-          )
-      ),
+              ElevatedButton(
+                onPressed: (){
+                  context.read<Cart>().calculateResult();
+                  Navigator.pushNamed(context, '/transactions');
+                },
+                child: Text('Далее'),
+              )
+            ],
+          ),
+        )
     );
   }
 
