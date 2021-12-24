@@ -6,9 +6,13 @@ class PaymentHandler {
     for (var element in payment_data) {
       var payer = [];
       for (var data in element.keys) {
-        payer.add(element[data]);
+        payer.add(element[data].toString());
       }
-      payment[payer[0]] = payer[1] * -1;
+      if (payment.containsKey(payer[0])) {
+        payment[payer[0]] -= double.parse(payer[1]);
+      } else {
+        payment[payer[0]] = double.parse(payer[1]) * -1;
+      }
     }
     return payment;
   }
