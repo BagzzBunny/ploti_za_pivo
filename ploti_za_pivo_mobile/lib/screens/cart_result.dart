@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:ploti_za_pivo_mobile/models/event.dart';
+import 'package:ploti_za_pivo_mobile/models/history_manager.dart';
 import 'package:provider/src/provider.dart';
 
 class ResultRoute extends StatelessWidget {
@@ -37,8 +38,15 @@ class ResultRoute extends StatelessWidget {
 
               ElevatedButton(
                 onPressed: (){
-                  context.read<Cart>().calculateResult();
-                  Navigator.pushNamed(context, '/transactions');
+                  cart.calculateResult();
+                  if (context.read<HistoryManager>().editingSequence){
+                    context.read<EventSequence>().addCart(cart);
+                    context.read<HistoryManager>().editingSequence = false;
+                    Navigator.popUntil(context, ModalRoute.withName('/travel_history'));
+                  } else {
+                    Navigator.pushNamed(context, '/cart_transactions');
+                  }
+
                 },
                 child: Text('Далее'),
               )
@@ -64,7 +72,7 @@ class MemberSumUp extends StatelessWidget {
       children: [
         Text(member.name),
         Container(
-          height: 100,
+          height: cart.getMemberBinds(member.name).length*20.0,
           child: ListView.builder(
             itemCount: cart.getMemberBinds(member.name).length,
             itemBuilder: (context,innerindex) {
@@ -93,6 +101,9 @@ class ProductSumUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var binds = context.read<Cart>().getMemberBinds(mName);
-    return Text(binds[index].product.name + ' ' + binds[index].qty.toString());
+    return Container(
+      height: 20,
+      child: Text(binds[index].product.name + ' ' + binds[index].qty.toString()),
+    );
   }
 }

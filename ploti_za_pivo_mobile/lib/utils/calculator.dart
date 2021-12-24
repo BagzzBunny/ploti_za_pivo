@@ -40,4 +40,55 @@ class Calculator {
       }
     }
   }
+
+  void set_debts(debt) {
+    debts = debt;
+  }
+
+  calculate_transactions() {
+    List m = [];
+    debts.forEach((person, debt) {
+      m.add([debt, person]);
+    });
+    double sum = 0;
+    m.forEach((element) {
+      sum += element[0];
+    });
+    if (sum != 0) {
+      return 'error';
+    }
+
+    double positive_nums = 0;
+    m.forEach((element) {
+      if (element[0] >= 0) {
+        positive_nums += element[0];
+      }
+    });
+    List transactions = [];
+    for (int i = 0; i < m.length; i++) {
+      if (m[i][0] <= 0) {
+        transactions.add([m[i][1], {}]);
+      }
+      if (m[i][0] > 0) {
+        Map transaction = {};
+        for (int j = 0; j < m.length; j++) {
+          if (m[j][0] < 0) {
+            if (m[j][0]*-1 < m[i][0]) {
+              transaction[m[j][1]] = m[j][0]*-1;
+              m[i][0] = m[i][0] - m[j][0]*-1;
+              m[j][0] = 0;
+            }
+            if (m[j][0]*-1 > m[i][0]) {
+              transaction[m[j][1]] = m[i][0];
+              m[i][0] = m[j][0]*-1 - m[i][0];
+              m[i][0] = 0;
+            }
+          }
+        }
+        transactions.add([m[i][1], transaction]);
+      }
+
+    }
+    return transactions;
+  }
 }

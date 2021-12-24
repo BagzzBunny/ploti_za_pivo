@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:ploti_za_pivo_mobile/models/event.dart';
 import 'package:provider/src/provider.dart';
 
 class CartEditRoute extends StatelessWidget {

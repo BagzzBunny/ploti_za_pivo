@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ploti_za_pivo_mobile/models/bind_info.dart';
-import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:ploti_za_pivo_mobile/models/event.dart';
 import 'package:ploti_za_pivo_mobile/models/member.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
@@ -169,7 +169,7 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
 
               ElevatedButton(
                 onPressed: (){
-                  Navigator.pushNamed(context, '/result');
+                  Navigator.pushNamed(context, '/cart_result');
                 },
                 child: Text('Рассчитать'),
               )

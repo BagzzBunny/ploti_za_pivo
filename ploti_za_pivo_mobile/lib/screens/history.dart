@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:ploti_za_pivo_mobile/models/cart.dart';
+import 'package:ploti_za_pivo_mobile/models/event.dart';
 import 'package:ploti_za_pivo_mobile/models/history_manager.dart';
 import 'package:provider/src/provider.dart';
 
+import 'item_builders/event_builder.dart';
+
 class HistoryRoute extends StatelessWidget {
+  String eventName = '';
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    var history = context.watch<HistoryManager>();
     return Scaffold(
         appBar: AppBar(
           title: Text('Плати За Пиво'),
@@ -20,19 +26,12 @@ class HistoryRoute extends StatelessWidget {
                 height: 500,
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text('Дата'),
-                        Text('Кол-во участников'),
-                        Text('Общая сумма'),
-                        Text('Статус'),
-                      ],
-                    ),
+                    BuildItemLabel(),
+                    Divider(),
                     Container(
                       height: 400,
                       child: ListView.builder(
-                        itemCount: context.watch<HistoryManager>().items.length,
+                        itemCount: history.items.length,
                         itemBuilder: (context,index) => BuildHistoryItem(index),
                       ),
                     ),
@@ -41,12 +40,124 @@ class HistoryRoute extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: (){
-                  var cart = context.read<Cart>();
-                  cart.clearCart();
-                  Navigator.pushNamed(context, '/add_members');
-                },
-                child: Text('Начать новую покупку'),
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Новый счет'),
+                    content: FocusTraversalGroup(
+                      child: Form(
+                          autovalidateMode: AutovalidateMode.always,
+                          key: _formKey,
+                          onChanged: () {
+                            Form.of(primaryFocus!.context!)!.save();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints.tight(const Size(200, 50)),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Название события',
+                                  labelText:'Название',
+
+                                ),
+
+                                onSaved: (String? value) {
+                                  eventName = value!;
+                                },
+                                validator: (String? value) {
+                                  return (value != null && value.isEmpty ) ? 'Введите название' : null;
+                                },
+                              ),
+                            ),
+                          )
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          eventName ='';
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Отмена'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if(_formKey.currentState!.validate()){
+                            var cart = context.read<Cart>();
+                            cart.clearCart();
+                            cart.setName(eventName);
+                            eventName ='';
+                            history.editingSequence = false;
+                            Navigator.pushNamed(context, '/add_members');
+                          }
+                        },
+                        child: const Text('Добавить'),
+                      ),
+                    ],
+                  ),
+                ),
+                child: Text('Добавить счет'),
+              ),
+              ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Новое путешествие'),
+                    content: FocusTraversalGroup(
+                      child: Form(
+                          autovalidateMode: AutovalidateMode.always,
+                          key: _formKey,
+                          onChanged: () {
+                            Form.of(primaryFocus!.context!)!.save();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints.tight(const Size(200, 50)),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Название события',
+                                  labelText:'Название',
+
+                                ),
+
+                                onSaved: (String? value) {
+                                  eventName = value!;
+                                },
+                                validator: (String? value) {
+                                  return (value != null && value.isEmpty ) ? 'Введите название' : null;
+                                },
+                              ),
+                            ),
+                          )
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          eventName ='';
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Отмена'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if(_formKey.currentState!.validate()){
+                            var sequence = context.read<EventSequence>();
+                            sequence.clearEventSequence();
+                            sequence.setName(eventName);
+                            eventName ='';
+                            history.editingSequence = true;
+                            Navigator.pushNamed(context, '/add_travel_members');
+                          }
+                        },
+                        child: const Text('Добавить'),
+                      ),
+                    ],
+                  ),
+                ),
+                child: Text('Добавить путешествие'),
               )
             ],
           ),
@@ -56,30 +167,3 @@ class HistoryRoute extends StatelessWidget {
 
 }
 
-class BuildHistoryItem extends StatelessWidget{
-  late int index;
-  BuildHistoryItem(this.index);
-
-  @override
-  Widget build(BuildContext context) {
-    var history = context.watch<HistoryManager>();
-    var cart = history.items[index];
-    return InkWell(
-      onTap: (){
-        var activeCart = context.read<Cart>();
-        activeCart.setCart(cart);
-        Navigator.pushNamed(context, '/result');
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(cart.date.year.toString() + '-' + cart.date.month.toString() + '-' + cart.date.day.toString()),
-          Text(cart.members.length.toString()),
-          Text(cart.getCostSum().toString()),
-          Icon(Icons.verified),
-        ],
-      ),
-    );
-  }
-
-}
