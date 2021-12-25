@@ -40,125 +40,155 @@ class HistoryRoute extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Новый счет'),
-                    content: FocusTraversalGroup(
-                      child: Form(
-                          autovalidateMode: AutovalidateMode.always,
-                          key: _formKey,
-                          onChanged: () {
-                            Form.of(primaryFocus!.context!)!.save();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints.tight(const Size(200, 50)),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: 'Название события',
-                                  labelText:'Название',
-
-                                ),
-
-                                onSaved: (String? value) {
-                                  eventName = value!;
-                                },
-                                validator: (String? value) {
-                                  return (value != null && value.isEmpty ) ? 'Введите название' : null;
-                                },
-                              ),
-                            ),
-                          )
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          eventName ='';
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Отмена'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          if(_formKey.currentState!.validate()){
-                            var cart = context.read<Cart>();
-                            cart.clearCart();
-                            cart.setName(eventName);
-                            eventName ='';
-                            history.editingSequence = false;
-                            Navigator.pushNamed(context, '/add_members');
-                          }
-                        },
-                        child: const Text('Добавить'),
-                      ),
-                    ],
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
                   ),
-                ),
-                child: Text('Добавить счет'),
+
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Новый счет'),
+                      content: FocusTraversalGroup(
+                        child: Form(
+                            autovalidateMode: AutovalidateMode.always,
+                            key: _formKey,
+                            onChanged: () {
+                              Form.of(primaryFocus!.context!)!.save();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints.tight(const Size(200, 50)),
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Название события',
+                                    labelText:'Название',
+
+                                  ),
+
+                                  onSaved: (String? value) {
+                                    eventName = value!;
+                                  },
+                                  validator: (String? value) {
+                                    return (value != null && value.isEmpty ) ? 'Введите название' : null;
+                                  },
+                                ),
+                              ),
+                            )
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            eventName ='';
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Отмена'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            if(_formKey.currentState!.validate()){
+                              var cart = context.read<Cart>();
+                              cart.clearCart();
+                              cart.setName(eventName);
+                              eventName ='';
+                              history.editingSequence = false;
+                              Navigator.pushNamed(context, '/add_members');
+                            }
+                          },
+                          child: const Text('Добавить'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Добавить счет',style: TextStyle(fontSize: 30),),
+                      )
+                  )
               ),
               ElevatedButton(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Новое путешествие'),
-                    content: FocusTraversalGroup(
-                      child: Form(
-                          autovalidateMode: AutovalidateMode.always,
-                          key: _formKey,
-                          onChanged: () {
-                            Form.of(primaryFocus!.context!)!.save();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints.tight(const Size(200, 50)),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: 'Название события',
-                                  labelText:'Название',
-
-                                ),
-
-                                onSaved: (String? value) {
-                                  eventName = value!;
-                                },
-                                validator: (String? value) {
-                                  return (value != null && value.isEmpty ) ? 'Введите название' : null;
-                                },
-                              ),
-                            ),
-                          )
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          eventName ='';
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Отмена'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          if(_formKey.currentState!.validate()){
-                            var sequence = context.read<EventSequence>();
-                            sequence.clearEventSequence();
-                            sequence.setName(eventName);
-                            eventName ='';
-                            history.editingSequence = true;
-                            Navigator.pushNamed(context, '/add_travel_members');
-                          }
-                        },
-                        child: const Text('Добавить'),
-                      ),
-                    ],
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
                   ),
-                ),
-                child: Text('Добавить путешествие'),
-              )
+
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Новое путешествие'),
+                      content: FocusTraversalGroup(
+                        child: Form(
+                            autovalidateMode: AutovalidateMode.always,
+                            key: _formKey,
+                            onChanged: () {
+                              Form.of(primaryFocus!.context!)!.save();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints.tight(const Size(200, 50)),
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Название события',
+                                    labelText:'Название',
+
+                                  ),
+
+                                  onSaved: (String? value) {
+                                    eventName = value!;
+                                  },
+                                  validator: (String? value) {
+                                    return (value != null && value.isEmpty ) ? 'Введите название' : null;
+                                  },
+                                ),
+                              ),
+                            )
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            eventName ='';
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Отмена'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            if(_formKey.currentState!.validate()){
+                              var sequence = context.read<EventSequence>();
+                              sequence.clearEventSequence();
+                              sequence.setName(eventName);
+                              eventName ='';
+                              history.editingSequence = true;
+                              Navigator.pushNamed(context, '/add_travel_members');
+                            }
+                          },
+                          child: const Text('Добавить'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Добавить путешествие',style: TextStyle(fontSize: 20),),
+                      )
+                  )
+              ),
             ],
           ),
         )

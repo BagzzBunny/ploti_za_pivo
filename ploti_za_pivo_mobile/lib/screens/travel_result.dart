@@ -7,14 +7,20 @@ class TravelResultRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var sequence = context.watch<EventSequence>();
-    List<dynamic> res = sequence.calculateTransactions();
     List<Map<String,dynamic>> transactions = [];
-    for (var b in res){
-      String name = b[0];
-      for (var pay in b[1].keys.toList()){
-        transactions.add({'who':name,'amount':b[1][pay],'whom':pay});
+    if (sequence.calculateTransactions() is String){
+
+    } else {
+      List<dynamic> res = sequence.calculateTransactions();
+      List<Map<String,dynamic>> transactions = [];
+      for (var b in res){
+        String name = b[0];
+        for (var pay in b[1].keys.toList()){
+          transactions.add({'who':name,'amount':b[1][pay],'whom':pay});
+        }
       }
     }
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Плати За Пиво'),
@@ -28,7 +34,8 @@ class TravelResultRoute extends StatelessWidget {
               Container(
                   height: 500,
                   child: Column(
-                    children: [
+                    children: !transactions.isEmpty ? [
+                      TransactionLabel(),
 
                       Divider(),
                       Container(
@@ -41,17 +48,39 @@ class TravelResultRoute extends StatelessWidget {
                         ),
                       ),
 
+                    ] : [
+                      TransactionLabel(),
+
+                      Divider(),
+
+                      Text('Не удалось вычислить переводы, проверьте сумму всех затрат')
                     ],
                   )
               ),
-
               ElevatedButton(
-                onPressed: (){
-                  context.read<HistoryManager>().addEvent(sequence);
-                  Navigator.popUntil(context, ModalRoute.withName('/history'));
-                },
-                child: Text('Перевести'),
-              )
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
+
+                  onPressed: (){
+                    context.read<HistoryManager>().addEvent(sequence);
+                    Navigator.popUntil(context, ModalRoute.withName('/history'));
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Сохранить в историю',style: TextStyle(fontSize: 20),),
+                      )
+                  )
+              ),
+
+
             ],
           ),
         )

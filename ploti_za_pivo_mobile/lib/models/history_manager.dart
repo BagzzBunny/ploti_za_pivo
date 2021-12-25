@@ -2,16 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:ploti_za_pivo_mobile/utils/event_handler.dart';
 
 import 'event.dart';
 import 'member.dart';
 
 class HistoryManager extends ChangeNotifier{
-  List<Event> items = [];
+  List<dynamic> items = [];
   bool editingSequence = false;
-  
   HistoryManager(){
+
+  }
+
+
+  makeExamples(){
+    clearEvents();
     var cart = Cart(DateTime.now(),'Пример покупки');
     cart.addMember(Member('Вася',true,130));
     cart.addMember(Member('Маша',true,10));
@@ -40,16 +44,40 @@ class HistoryManager extends ChangeNotifier{
     addEvent(sequence);
   }
 
-  void addEvent(Event event) {
+  Future<bool> initHistory() async {
+    var _json = (await _readJson())['events'];
+    items = [];
+    List<Cart> carts = List<Cart>.from(_json['carts'].map((dynamic json) {
+      return Cart.fromJson(json);
+    }).toList());
+    items.addAll(carts);
+    List<EventSequence> sequences = List<EventSequence>.from(_json['sequences'].map((dynamic json) {
+      return EventSequence.fromJson(json);
+    }).toList());
+    items.addAll(sequences);
+
+
+    return true;
+  }
+
+  void addEvent(dynamic event) {
     if (!items.contains(event)){
       items.add(event);
     }
+    _writeJson('events',{'carts': items.whereType<Cart>().toList(),'sequences': items.whereType<EventSequence>().toList()});
     notifyListeners();
   }
 
-  void removeEvent(Event event) {
+  void removeEvent(dynamic event) {
     items.remove(event);
+    _writeJson('events',{'carts': items.whereType<Cart>().toList(),'sequences': items.whereType<EventSequence>().toList()});
     notifyListeners();
+  }
+
+  void clearEvents() {
+    items.clear();
+    _writeJson('events',{'carts': [],'sequences': []});
+    _readJson();
   }
 
   Future<String> get _localPath async {
@@ -60,7 +88,7 @@ class HistoryManager extends ChangeNotifier{
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/saved_coupons');
+    return File('$path/saved_events');
   }
 
 

@@ -41,8 +41,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
+            // Define the default brightness and colors.
+            brightness: Brightness.light,
 
-            primarySwatch: Colors.blue,
+            // Define the default font family.
+            fontFamily: 'Roboto',
+
           ),
           routes:{
             '/' : (context) => WelcomeRoute(),

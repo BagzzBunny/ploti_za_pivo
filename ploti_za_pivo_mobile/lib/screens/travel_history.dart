@@ -38,20 +38,50 @@ class TravelHistoryRoute extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: (){
-                  var cart = context.read<Cart>();
-                  cart.clearCart();
-                  Navigator.pushNamed(context, '/travel_add_cart');
-                },
-                child: Text('Добавить счет'),
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
+
+                  onPressed: (){
+                    var cart = context.read<Cart>();
+                    cart.clearCart();
+                    Navigator.pushNamed(context, '/travel_add_cart');
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Добавить счет',style: TextStyle(fontSize: 30),),
+                      )
+                  )
               ),
               ElevatedButton(
-                onPressed: (){
-                  context.read<EventSequence>().calculateResult();
-                  Navigator.pushNamed(context, '/travel_result');
-                },
-                child: Text('Рассчитать'),
-              )
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
+
+                  onPressed: (){
+                    context.read<EventSequence>().calculateResult();
+                    Navigator.pushNamed(context, '/travel_result');
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Рассчитать',style: TextStyle(fontSize: 30),),
+                      )
+                  )
+              ),
             ],
           ),
         )

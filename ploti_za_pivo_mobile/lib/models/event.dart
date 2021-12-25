@@ -6,19 +6,23 @@ import 'package:ploti_za_pivo_mobile/utils/calculator.dart';
 import 'package:ploti_za_pivo_mobile/utils/event_handler.dart';
 import 'package:ploti_za_pivo_mobile/utils/payment_handler.dart';
 
-class Event extends ChangeNotifier{
+
+
+class EventSequence extends ChangeNotifier{
   UniqueKey id = UniqueKey();
   late DateTime date;
   late String name;
   List<Member> members = [];
   Map<String, double> result = {};
-  Event(this.date,this.name);
+  late DateTime endDate;
+  List<Cart> carts = [];
+
+  EventSequence(this.date,this.name);
 
   setName(String newName){
     name = newName;
     notifyListeners();
   }
-  getCostSum(){}
 
   getMember(String mName){
     return members.firstWhereOrNull((element) => element.name == mName);
@@ -33,18 +37,11 @@ class Event extends ChangeNotifier{
   }
 
   @override
-  bool operator ==(Object other) => other is Event && other.id == id;
+  bool operator ==(Object other) => other is EventSequence && other.id == id;
 
   @override
   int get hashCode => id.hashCode;
-}
 
-class EventSequence extends Event{
-  late DateTime endDate;
-  List<Cart> carts = [];
-
-  EventSequence(DateTime date,String name) : super(date,name);
-  
   addCart(Cart cart){
     carts.add(cart);
     endDate = (carts.map((e) => e.date).toList()).max;
@@ -129,16 +126,69 @@ class EventSequence extends Event{
 
     return event.get_overall_transacions();
   }
+
+  EventSequence.fromJson(Map<String,dynamic> json){
+    print('seq.fromjson');
+    date = DateTime.parse(json['date']);
+    name = json['name'];
+    carts = List<Cart>.from(json['carts'].map((dynamic json) {
+      return Cart.fromJson(json);
+    }).toList());
+    endDate = DateTime.parse(json['endDate']);
+    members = List<Member>.from(json['members'].map((dynamic json) {
+      return Member.fromJson(json);
+    }).toList());
+    calculateResult();
+    id = UniqueKey();
+  }
+
+  Map<String, dynamic> toJson() {
+    print('seq.tojson');
+    return {
+      'date' : date.toIso8601String(),
+      'name' : name,
+      'carts' : carts,
+      'endDate' : endDate.toIso8601String(),
+      'members' : members,
+    };
+  }
 }
 
-class Cart extends Event{
-  
+class Cart extends ChangeNotifier{
+  UniqueKey id = UniqueKey();
+  late DateTime date;
+  late String name;
+  List<Member> members = [];
+  Map<String, double> result = {};
   
   List<Product> products = [];
   List<Bind> binds = [];
   
 
-  Cart(DateTime date,String name) : super(date,name);
+  Cart(this.date,this.name);
+
+  getMember(String mName){
+    return members.firstWhereOrNull((element) => element.name == mName);
+  }
+  addMember(Member member){
+    members.add(member);
+    notifyListeners();
+  }
+  removeMember(Member member){
+    members.remove(member);
+    notifyListeners();
+  }
+
+  @override
+  bool operator ==(Object other) => other is Cart && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  setName(String newName){
+    name = newName;
+    notifyListeners();
+  }
 
   setCart(Cart cart){
     id = cart.id;
@@ -197,6 +247,7 @@ class Cart extends Event{
     var handledPaymentData = PaymentHandler.handle_payment_data(paymentData);
     calc.send_payment(handledPaymentData);
     calc.get_debts();
+    print(calc.calculate_transactions());
     return calc.calculate_transactions();
   }
 
@@ -266,6 +317,35 @@ class Cart extends Event{
     binds.remove(bind);
     notifyListeners();
   }
+
+  Cart.fromJson(Map<String,dynamic> json){
+    print('cart.fromjson');
+    date = DateTime.parse(json['date']);
+    name = json['name'];
+    members = List<Member>.from(json['members'].map((dynamic json) {
+      return Member.fromJson(json);
+    }).toList());
+    products = List<Product>.from(json['products'].map((dynamic json) {
+      return Product.fromJson(json);
+    }).toList());
+
+    binds = List<Bind>.from(json['binds'].map((dynamic json) {
+      return Bind.fromJson(json);
+    }).toList());
+    calculateResult();
+    id = UniqueKey();
+  }
+
+  Map<String, dynamic> toJson() {
+    print('cart.tojson');
+    return {
+      'date' : date.toIso8601String(),
+      'name' : name,
+      'members' : members,
+      'products' : products,
+      'binds' : binds,
+    };
+  }
 }
 
 class Product{
@@ -274,6 +354,20 @@ class Product{
   late double price;
 
   Product(this.name, this.qty, this.price);
+
+  Product.fromJson(Map<String,dynamic> json){
+    name = json['name'];
+    qty = json['qty'];
+    price = json['price'];
+  }
+
+  Map<String,dynamic> toJson(){
+    return {
+      'name' : name,
+      'qty' : qty,
+      'price' : price,
+    };
+  }
 
   @override
   bool operator ==(Object other) => other is Product && other.name == name;
@@ -288,6 +382,20 @@ class Bind{
   late int qty;
 
   Bind(this.member,this.product,this.qty);
+
+  Bind.fromJson(Map<String,dynamic> json){
+    member = Member.fromJson(json['member']);
+    product = Product.fromJson(json['product']);
+    qty = json['qty'];
+  }
+
+  Map<String,dynamic> toJson(){
+    return {
+      'member' : member,
+      'product' : product,
+      'qty' : qty,
+    };
+  }
 
   @override
   bool operator ==(Object other) => other is Bind && other.member == member && other.product == product;

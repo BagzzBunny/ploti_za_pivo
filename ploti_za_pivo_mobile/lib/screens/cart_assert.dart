@@ -33,14 +33,41 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
             children: [
               Text('Сопоставьте участников покупок и позиции чека'),
               Container(
-                  height: 500,
+                  height: 600,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('Имя'),
-                          Text('Позиция'),
+                          Container(
+                              width: 100,
+                              height: 50,
+                              margin: EdgeInsets.all(5),
+                              child:Align(
+                                alignment: Alignment.center,
+                                child: Text('Имя',style: TextStyle(fontSize: 18),),
+                              )
+                          ),
+                          Container(
+                              width: 100,
+                              height: 50,
+                              margin: EdgeInsets.all(5),
+                              child:Align(
+                                alignment: Alignment.center,
+                                child: Text('Позиция',style: TextStyle(fontSize: 18),),
+                              )
+                          ),
+                          Container(
+                              width: 60,
+                              height: 50,
+                              margin: EdgeInsets.all(5),
+                              child:Align(
+                                alignment: Alignment.center,
+                                child: Text('Кол-во',style: TextStyle(fontSize: 18),),
+                              )
+                          ),
+                          SizedBox(width: 50,)
                         ],
                       ),
                       Divider(),
@@ -54,74 +81,82 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () => showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Новая позиция чека'),
-                            content: FocusTraversalGroup(
-                              child: Form(
-                                  autovalidateMode: AutovalidateMode.always,
-                                  onChanged: () {
-                                    //Form.of(primaryFocus!.context!)!.save();
-                                  },
-                                  child: Column(
-                                    children: [
-                                      DropdownButtonFormField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Имя',
-                                        ),
-                                        value: mName == '' ? null : mName,
-                                        onChanged: (String? value) {
-                                          mName = value!;
-                                        },
-                                        items: cart.members
-                                            .map((Member member) {
-                                          return DropdownMenuItem<String>(
-                                            value: member.name,
-                                            child: Text(member.name),
-                                          );
-                                        }).toList(),
-                                      ),
-                                      DropdownButtonFormField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Позиция',
-                                        ),
-                                        value: pName == '' ? null : pName,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            pName = value!;
-                                            var product = context.read<Cart>().getProduct(pName);
-                                            context.read<BindInfo>().updateItems(product == null ? 0 : product.qty);
+                          style: ElevatedButton.styleFrom(
+                              primary: Color.fromARGB(255, 58, 97, 87), // background
+                              onPrimary: Colors.white, // foreground
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              )
+                          ),
 
-                                          });
-                                        },
-
-                                        items: cart.products
-                                            .map((Product product) {
-                                          return DropdownMenuItem<String>(
-                                            value: product.name,
-                                            child: Text(product.name),
-                                          );
-                                        }).toList(),
-
-                                      ),
-                                      TextFormField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Количество частей',
-                                          labelText: 'Части',
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Новая позиция чека'),
+                              content: FocusTraversalGroup(
+                                child: Form(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    onChanged: () {
+                                      //Form.of(primaryFocus!.context!)!.save();
+                                    },
+                                    child: Column(
+                                      children: [
+                                        DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hintText: 'Имя',
+                                          ),
+                                          value: mName == '' ? null : mName,
+                                          onChanged: (String? value) {
+                                            mName = value!;
+                                          },
+                                          items: cart.members
+                                              .map((Member member) {
+                                            return DropdownMenuItem<String>(
+                                              value: member.name,
+                                              child: Text(member.name),
+                                            );
+                                          }).toList(),
                                         ),
-                                        onSaved: (String? value) {
-                                          pQty = value!;
-                                        },
-                                        validator: (String? value) {
-                                          return (value != null && (value.isEmpty || int.tryParse(value) == 0)) ? 'Введите количество' : null;
-                                        },
-                                        keyboardType:TextInputType.numberWithOptions(decimal: true),
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter.allow(RegExp(r'(^\d*)'))
-                                        ],
-                                      ),
-                                      /*DropdownButtonFormField(
+                                        DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hintText: 'Позиция',
+                                          ),
+                                          value: pName == '' ? null : pName,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              pName = value!;
+                                              var product = context.read<Cart>().getProduct(pName);
+                                              context.read<BindInfo>().updateItems(product == null ? 0 : product.qty);
+
+                                            });
+                                          },
+
+                                          items: cart.products
+                                              .map((Product product) {
+                                            return DropdownMenuItem<String>(
+                                              value: product.name,
+                                              child: Text(product.name),
+                                            );
+                                          }).toList(),
+
+                                        ),
+                                        TextFormField(
+                                          decoration: InputDecoration(
+                                            hintText: 'Количество частей',
+                                            labelText: 'Части',
+                                          ),
+                                          onSaved: (String? value) {
+                                            pQty = value!;
+                                          },
+                                          validator: (String? value) {
+                                            return (value != null && (value.isEmpty || int.tryParse(value) == 0)) ? 'Введите количество' : null;
+                                          },
+                                          keyboardType:TextInputType.numberWithOptions(decimal: true),
+                                          inputFormatters: <TextInputFormatter>[
+                                            FilteringTextInputFormatter.allow(RegExp(r'(^\d*)'))
+                                          ],
+                                        ),
+                                        /*DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             hintText: 'Позиция',
                                           ),
@@ -131,48 +166,69 @@ class _CartAssertRouteState extends State<CartAssertRoute> {
                                           },
                                           items: context.watch<BindInfo>().items,
                                         ),*/
-                                    ],
-                                  )
+                                      ],
+                                    )
 
+                                ),
                               ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    mName = '';
+                                    pName = '';
+                                    context.read<BindInfo>().updateItems(0);
+
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Отмена'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    cart.addBind(Bind(cart.getMember(mName),cart.getProduct(pName),context.read<BindInfo>().selected));
+                                    mName = '';
+                                    pName = '';
+                                    context.read<BindInfo>().updateItems(0);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Добавить'),
+                                ),
+                              ],
                             ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  mName = '';
-                                  pName = '';
-                                  context.read<BindInfo>().updateItems(0);
-
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Отмена'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  cart.addBind(Bind(cart.getMember(mName),cart.getProduct(pName),context.read<BindInfo>().selected));
-                                  mName = '';
-                                  pName = '';
-                                  context.read<BindInfo>().updateItems(0);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Добавить'),
-                              ),
-                            ],
                           ),
-                        ),
-                        child: Text('Добавить'),
+                          child: Container(
+                              width: 250,
+                              height: 50,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Добавить',style: TextStyle(fontSize: 30),),
+                              )
+                          )
                       ),
 
                     ],
                   )
               ),
-
               ElevatedButton(
-                onPressed: (){
-                  Navigator.pushNamed(context, '/cart_result');
-                },
-                child: Text('Рассчитать'),
-              )
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
+
+                  onPressed: (){
+                    Navigator.pushNamed(context, '/cart_result');
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Рассчитать',style: TextStyle(fontSize: 30),),
+                      )
+                  )
+              ),
             ],
           ),
         )
@@ -192,9 +248,36 @@ class AssertPosition extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text(bind.member.name),
-        Text(bind.product.name),
-        Text(bind.qty.toString()),
+        Container(
+            width: 100,
+            height: 50,
+            margin: EdgeInsets.all(5),
+            color: Color.fromARGB(255, 215, 255, 215) ,
+            child:Align(
+              alignment: Alignment.center,
+              child: Text(bind.member.name,style: TextStyle(fontSize: 18),),
+            )
+        ),
+        Container(
+            width: 100,
+            height: 50,
+            margin: EdgeInsets.all(5),
+            color: Color.fromARGB(255, 215, 255, 215) ,
+            child:Align(
+              alignment: Alignment.center,
+              child: Text(bind.product.name,style: TextStyle(fontSize: 18),),
+            )
+        ),
+        Container(
+            width: 60,
+            height: 50,
+            margin: EdgeInsets.all(5),
+            color: Color.fromARGB(255, 215, 255, 215) ,
+            child:Align(
+              alignment: Alignment.center,
+              child: Text(bind.qty.toString(),style: TextStyle(fontSize: 18),),
+            )
+        ),
         IconButton(
           onPressed: (){
             context.read<Cart>().removeBind(bind);

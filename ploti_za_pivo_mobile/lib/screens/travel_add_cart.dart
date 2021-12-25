@@ -16,28 +16,63 @@ class TravelAddCartRoute extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('Выберите нужные счета из истории, чтобы сделать перерасчет, или добавьте новый счет'),
+              Align(
+                alignment: Alignment.center,
+                child: Text('Выберите нужные счета из истории, чтобы сделать перерасчет, или добавьте новый счет',textAlign:TextAlign.center,style: TextStyle(fontSize: 18),),
+              ),
+
               ElevatedButton(
-                onPressed: (){
-                  Navigator.pushNamed(context, '/add_cart_from_history');
-                },
-                child: Text('Выбрать из истории'),
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
+
+                  onPressed: (){
+                    Navigator.pushNamed(context, '/add_cart_from_history');
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Выбрать из истории',style: TextStyle(fontSize: 18),),
+                      )
+                  )
               ),
               ElevatedButton(
-                onPressed: (){
-                  var cart = context.read<Cart>();
-                  cart.clearCart();
-                  cart.members = context.read<EventSequence>().members;
-                  for (Member member in cart.members){
-                    member.payed = false;
-                    member.amountPayed = 0;
-                  }
-                  context.read<HistoryManager>().editingSequence = true;
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
 
-                  Navigator.pushNamed(context, '/add_members');
-                },
-                child: Text('Создать новый'),
-              )
+                  onPressed: (){
+                    var cart = context.read<Cart>();
+                    cart.clearCart();
+                    cart.members = context.read<EventSequence>().members;
+                    for (Member member in cart.members){
+                      member.payed = false;
+                      member.amountPayed = 0;
+                    }
+                    context.read<HistoryManager>().editingSequence = true;
+
+                    Navigator.pushNamed(context, '/add_members');
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Создать новый',style: TextStyle(fontSize: 30),),
+                      )
+                  )
+              ),
+
             ],
           ),
         )

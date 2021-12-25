@@ -15,17 +15,45 @@ class AddCartRoute extends StatelessWidget {
             children: [
               Text('Сделайте фото чека или введите его позиции вручную'),
               ElevatedButton(
-                onPressed: (){
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
 
-                },
-                child: Text('Фото'),
+                  onPressed: null,
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Фото',style: TextStyle(fontSize: 30),),
+                      )
+                  )
               ),
               ElevatedButton(
-                onPressed: (){
-                  Navigator.pushNamed(context, '/cart_edit');
-                },
-                child: Text('Ввести'),
-              )
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
+
+                  onPressed: (){
+                    Navigator.pushNamed(context, '/cart_edit');
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Ввести вручную',style: TextStyle(fontSize: 30),),
+                      )
+                  )
+              ),
             ],
           ),
         )

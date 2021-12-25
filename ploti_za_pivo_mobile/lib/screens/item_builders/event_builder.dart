@@ -31,7 +31,7 @@ class BuildEventSequenceItem extends StatelessWidget{
 }
 
 class BuildItem extends StatelessWidget{
-  final Event event;
+  final dynamic event;
 
   const BuildItem(this.event,{Key? key}) : super(key: key);
 
@@ -51,32 +51,36 @@ class BuildItem extends StatelessWidget{
         }
 
       },
-      child: AspectRatio(
-        aspectRatio: 8,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 40,
-              child: event is Cart ? Icon(Icons.description) : Icon(Icons.airplanemode_active),
-            ),
-            Container(
-              width: 100,
-              child: Text(event.date.day.toString() + '-' + event.date.month.toString() + '-' + event.date.year.toString()),
-            ),
-            Container(
-              width: 40,
-              child: Text(event.members.length.toString()),
-            ),
-            Container(
-              width: 100,
-              child: Text(event.getCostSum().toString()),
-            ),
-            Container(
-              width: 40,
-              child: Icon(Icons.verified),
-            ),
-          ],
+      child: Container(
+        color: event is Cart ? Color.fromARGB(255, 215, 255, 215) : Color.fromARGB(255, 250, 251, 193),
+        margin: EdgeInsets.all(5),
+        child: AspectRatio(
+          aspectRatio: 8,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 40,
+                child: event is Cart ? Icon(Icons.description) : Icon(Icons.airplanemode_active),
+              ),
+              Container(
+                width: 100,
+                child: Text(event.date.day.toString() + '-' + event.date.month.toString() + '-' + event.date.year.toString()),
+              ),
+              Container(
+                width: 40,
+                child: Text(event.members.length.toString()),
+              ),
+              Container(
+                width: 100,
+                child: Text(event.getCostSum().toString()),
+              ),
+              Container(
+                width: 40,
+                child: Icon(Icons.verified),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -98,7 +102,8 @@ class BuildCartAddItem extends StatelessWidget{
 }
 
 class BuildAddItem extends StatelessWidget{
-  final Event event;
+
+  final dynamic event;
   final bool picked;
   final int index;
 
@@ -120,37 +125,41 @@ class BuildAddItem extends StatelessWidget{
         }
 
       },
-      child: AspectRatio(
-        aspectRatio: 8,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 40,
-              child: event is Cart ? Icon(Icons.description) : Icon(Icons.airplanemode_active),
-            ),
-            Container(
-              width: 100,
-              child: Text(event.date.day.toString() + '-' + event.date.month.toString() + '-' + event.date.year.toString()),
-            ),
-            Container(
-              width: 40,
-              child: Text(event.members.length.toString()),
-            ),
-            Container(
-              width: 100,
-              child: Text(event.getCostSum().toString()),
-            ),
-            Container(
-              width: 40,
-              child: Checkbox(
-                value: picked,
-                onChanged: (value){
-                  context.read<PickController>().pick(index);
-                },
-              )
-            ),
-          ],
+      child: Container(
+        color: event is Cart ? Color.fromARGB(255, 215, 255, 215) : Color.fromARGB(255, 250, 251, 193),
+        margin: EdgeInsets.all(5),
+        child: AspectRatio(
+          aspectRatio: 8,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 40,
+                child: event is Cart ? Icon(Icons.description) : Icon(Icons.airplanemode_active),
+              ),
+              Container(
+                width: 100,
+                child: Text(event.date.day.toString() + '-' + event.date.month.toString() + '-' + event.date.year.toString()),
+              ),
+              Container(
+                width: 40,
+                child: Text(event.members.length.toString()),
+              ),
+              Container(
+                width: 100,
+                child: Text(event.getCostSum().toString()),
+              ),
+              Container(
+                  width: 40,
+                  child: Checkbox(
+                    value: picked,
+                    onChanged: (value){
+                      context.read<PickController>().pick(index);
+                    },
+                  )
+              ),
+            ],
+          ),
         ),
       ),
     );

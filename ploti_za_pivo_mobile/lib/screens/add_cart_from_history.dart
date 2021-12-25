@@ -40,20 +40,36 @@ class AddCartFromHistoryRoute extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: (){
-                    List<Cart> picked = [];
+                    style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 58, 97, 87), // background
+                        onPrimary: Colors.white, // foreground
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        )
+                    ),
 
-                    for (int index in context.read<PickController>().picked){
-                      picked.add(history.items.whereType<Cart>().toList()[index]);
-                    }
-                    for (Cart cart in picked){
-                      history.removeEvent(cart);
-                      context.read<EventSequence>().addCart(cart);
-                    }
-                    Navigator.pushNamed(context, '/travel_history');
-                  },
-                  child: Text('Добавить в путешествие'),
-                )
+                    onPressed: (){
+                      List<Cart> picked = [];
+
+                      for (int index in context.read<PickController>().picked){
+                        picked.add(history.items.whereType<Cart>().toList()[index]);
+                      }
+                      for (Cart cart in picked){
+                        history.removeEvent(cart);
+                        context.read<EventSequence>().addCart(cart);
+                      }
+                      Navigator.pushNamed(context, '/travel_history');
+                    },
+                    child: Container(
+                        width: 250,
+                        height: 50,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text('Добавить в путешествие',style: TextStyle(fontSize: 20),),
+                        )
+                    )
+                ),
+
               ],
             ),
           )

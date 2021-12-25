@@ -18,38 +18,49 @@ class ResultRoute extends StatelessWidget {
             children: [
               Text('Проверьте результаты'),
               Container(
-                  height: 600,
-                  child: Column(
-                    children: [
-                      Divider(),
-                      Container(
-                        height: 500,
-                        child: ListView.builder(
-                            itemCount: cart.members.length,
-                            itemBuilder: (context,index){
-                              return MemberSumUp(index);
-                            }
-                        ),
-                      ),
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black,width: 1)
+                ),
+                height: 600,
+                child: ListView.builder(
+                    itemCount: cart.members.length,
+                    itemBuilder: (context,index){
+                      return MemberSumUp(index);
+                    }
+                ),
+              ),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 58, 97, 87), // background
+                      onPrimary: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      )
+                  ),
 
-                    ],
+                  onPressed: (){
+                    cart.calculateResult();
+                    if (context.read<HistoryManager>().editingSequence){
+                      context.read<EventSequence>().addCart(cart);
+                      context.read<HistoryManager>().editingSequence = false;
+                      Navigator.popUntil(context, ModalRoute.withName('/travel_history'));
+                    } else {
+                      Navigator.pushNamed(context, '/cart_transactions');
+                    }
+
+                  },
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text('Посмотреть переводы',style: TextStyle(fontSize: 20),),
+                      )
                   )
               ),
 
-              ElevatedButton(
-                onPressed: (){
-                  cart.calculateResult();
-                  if (context.read<HistoryManager>().editingSequence){
-                    context.read<EventSequence>().addCart(cart);
-                    context.read<HistoryManager>().editingSequence = false;
-                    Navigator.popUntil(context, ModalRoute.withName('/travel_history'));
-                  } else {
-                    Navigator.pushNamed(context, '/cart_transactions');
-                  }
-
-                },
-                child: Text('Далее'),
-              )
             ],
           ),
         )
@@ -70,7 +81,20 @@ class MemberSumUp extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(member.name),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+              width: 150,
+              height: 50,
+              margin: EdgeInsets.all(5),
+              color: Color.fromARGB(255, 215, 255, 215) ,
+              child:Align(
+                alignment: Alignment.center,
+                child: Text(member.name,style: TextStyle(fontSize: 18),),
+              )
+          ),
+        ),
+
         Container(
           height: cart.getMemberBinds(member.name).length*20.0,
           child: ListView.builder(
@@ -82,7 +106,11 @@ class MemberSumUp extends StatelessWidget {
         ),
 
         Divider(),
-        Text('Итого: ' + cart.getMemberBindsSum(member.name).toString()),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text('Итого: ' + cart.getMemberBindsSum(member.name).toString()),
+        ),
+
         SizedBox(
           height: 20,
         )
@@ -102,8 +130,11 @@ class ProductSumUp extends StatelessWidget {
   Widget build(BuildContext context) {
     var binds = context.read<Cart>().getMemberBinds(mName);
     return Container(
-      height: 20,
-      child: Text(binds[index].product.name + ' ' + binds[index].qty.toString()),
+        width: 80,
+        height: 40,
+        margin: EdgeInsets.all(2),
+        color: Color.fromARGB(255, 215, 255, 215) ,
+        child:Text(binds[index].product.name + ' ' + binds[index].qty.toString(),textAlign:TextAlign.center,style: TextStyle(fontSize: 14),)
     );
   }
 }

@@ -274,6 +274,7 @@ class TransactionsInfo extends StatelessWidget{
     return InkWell(
       onTap: (){context.read<PickProvider>().pick();},
       child: Container(
+        color: Color.fromARGB(255, 255, 248, 248),
         child: picked ? Column(
           children: [
             Row(
